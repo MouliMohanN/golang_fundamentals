@@ -67,6 +67,27 @@ fmt.Printf("%c\n", 72)   // H
 fmt.Printf("%U\n", '世') // U+4E16
 ```
 
+### `%c` vs `%q`
+
+| | `%c` | `%q` |
+|---|---|---|
+| Output | Raw character, no quotes | Character wrapped in single quotes, escaped |
+| Unprintable chars | Invisible / breaks layout | Always human-readable (`'\t'`, `'\n'`) |
+| Use when | Outputting the character itself | Debugging or inspecting what a character is |
+
+```go
+fmt.Printf("%c", 72)   // H        — raw character
+fmt.Printf("%q", 72)   // 'H'      — quoted character
+
+fmt.Printf("%c", 9)    // 	        — raw tab (invisible)
+fmt.Printf("%q", 9)    // '\t'     — escaped, readable
+
+fmt.Printf("%c", 10)   //          — raw newline (breaks the line)
+fmt.Printf("%q", 10)   // '\n'     — escaped, readable
+```
+
+> Prefer `%q` when debugging — it never produces invisible or layout-breaking output.
+
 ---
 
 ## Float Verbs
@@ -75,16 +96,58 @@ fmt.Printf("%U\n", '世') // U+4E16
 |---|---|---|
 | `%f` | Decimal notation | `123456.789000` |
 | `%F` | Same, uppercase `INF`/`NAN` | `123456.789000` |
-| `%e` | Scientific, lowercase | `1.234568e+05` |
-| `%E` | Scientific, uppercase | `1.234568E+05` |
-| `%g` | Compact (`%e` for large, `%f` otherwise) | `123456.789` |
-| `%G` | Same as `%g`, uppercase `E` | `123456.789` |
+| `%e` | Scientific, lowercase `e` | `1.234568e+05` |
+| `%E` | Scientific, uppercase `E` | `1.234568E+05` |
+| `%g` | Compact — auto-picks `%e` or `%f`, lowercase | `123456.789` |
+| `%G` | Compact — auto-picks `%E` or `%f`, uppercase | `123456.789` |
 
 ```go
 fmt.Printf("%e\n", 123456.789)  // 1.234568e+05
 fmt.Printf("%.2f\n", 3.14159)   // 3.14
 fmt.Printf("%g\n", 0.00001)     // 1e-05
 ```
+
+### What "compact" means (`%g` / `%G`)
+
+`%g` doesn't force decimal or scientific — it **picks whichever is shorter** for that number.
+
+Go's rule: use `%e` if the exponent is **< -4** or **>= precision (default 6)**, otherwise use `%f`.
+
+```go
+// Normal number — %g stays decimal, cleaner than forced scientific
+fmt.Printf("%f\n", 123.456)   // 123.456000   — trailing zeros, noisy
+fmt.Printf("%e\n", 123.456)   // 1.234560e+02 — overkill for a simple number
+fmt.Printf("%g\n", 123.456)   // 123.456       — clean, no noise
+
+// Very small number — %g switches to scientific, easier to read
+fmt.Printf("%f\n", 0.000001)  // 0.000001      — easy to miscount the zeros
+fmt.Printf("%e\n", 0.000001)  // 1.000000e-06  — clear but always forces scientific
+fmt.Printf("%g\n", 0.000001)  // 1e-06          — shortest, still clear
+
+// Very large number — %g switches to scientific automatically
+fmt.Printf("%f\n", 99999999.9)  // 99999999.900000 — verbose
+fmt.Printf("%g\n", 99999999.9)  // 9.9999999e+07   — switches only when needed
+```
+
+> Use `%g` when you don't know ahead of time whether a number will be tiny or huge — it adapts. Use `%f` when you always want decimal (e.g. currency). Use `%e` when you always want scientific (e.g. physics output).
+
+---
+
+### Lowercase vs Uppercase (`%e` vs `%E`, `%g` vs `%G`)
+
+The numbers are identical — only the exponent letter differs.
+
+```go
+fmt.Printf("%e\n", 123456.789)  // 1.234568e+05
+fmt.Printf("%E\n", 123456.789)  // 1.234568E+05
+fmt.Printf("%g\n", 0.00001)     // 1e-05
+fmt.Printf("%G\n", 0.00001)     // 1E-05
+```
+
+| Case | When to use |
+|---|---|
+| Lowercase (`%e`, `%g`) | Logs, terminals, JSON, general programming output — the default |
+| Uppercase (`%E`, `%G`) | Scientific papers, financial reports, Excel exports, APIs that expect uppercase `E` notation |
 
 ---
 
