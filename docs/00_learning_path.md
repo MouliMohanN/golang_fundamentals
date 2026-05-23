@@ -2,6 +2,8 @@
 
 A structured guide to learning Go from scratch. Each topic links to its doc and has a matching runnable example in `src/`.
 
+**Progress:** `01` ✓ `02` ✓ `03` ✓ `04` ✓ `05` ○ `06` ○ `07` ○
+
 ---
 
 ## How to run any example
@@ -61,7 +63,7 @@ go run src/<folder>/main.go
 
 ---
 
-### 04 — Functions & Error Handling _(coming next)_
+### 04 — Functions & Error Handling ✓
 **Doc:** `docs/04_functions_and_errors.md` | **Code:** `src/04_functions_and_errors/main.go`
 
 - Function declaration and calling
@@ -81,7 +83,7 @@ go run src/<folder>/main.go
 
 ---
 
-### 05 — Pointers _(coming)_
+### 05 — Pointers _(coming next)_
 **Doc:** `docs/05_pointers.md` | **Code:** `src/05_pointers/main.go`
 
 - What is a pointer (`&`, `*`)
