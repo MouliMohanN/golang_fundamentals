@@ -2,7 +2,7 @@
 
 A structured guide to learning Go from scratch. Each topic links to its doc and has a matching runnable example in `src/`.
 
-**Progress:** `01` ✓ `02` ✓ `03` ✓ `04` ✓ `05` ✓ `06` ○ `07` ○
+**Progress:** `01` ✓ `02` ✓ `03` ✓ `04` ✓ `05` ✓ `06` ✓ `07` ○
 
 ---
 
@@ -97,7 +97,7 @@ go run src/<folder>/main.go
 
 ---
 
-### 06 — Structs, Interfaces & Types _(coming next)_
+### 06 — Structs, Interfaces & Types ✓
 **Doc:** `docs/06_structs_interfaces_types.md` | **Code:** `src/06_structs_interfaces_types/main.go`
 
 - Struct definition and initialization
@@ -113,7 +113,7 @@ go run src/<folder>/main.go
 
 ---
 
-### 07 — Maps & Generics _(coming)_
+### 07 — Maps & Generics _(coming next)_
 **Doc:** `docs/07_maps_and_generics.md` | **Code:** `src/07_maps_and_generics/main.go`
 
 - Map declaration and initialization
